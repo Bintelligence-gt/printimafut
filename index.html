@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Recibo IMAFUT</title>
+
+<style>
+
+body{
+    font-family: 'Segoe UI', sans-serif;
+    background:#e9edf1;
+}
+
+.contenedor{
+    width: 850px;
+    margin: 30px auto;
+    background: white;
+    padding: 50px;
+}
+
+/* ENCABEZADO */
+
+.top{
+    display:flex;
+    justify-content: space-between;
+}
+
+.logo{
+    color:#24435b;
+}
+
+.logo h1{
+    font-size:50px;
+    margin:0;
+    letter-spacing:3px;
+}
+
+.logo p{
+    margin:0;
+    font-size:14px;
+}
+
+.recibo-info{
+    text-align:center;
+}
+
+.recibo-info h2{
+    letter-spacing:4px;
+    margin:0;
+}
+
+.cuadro-fecha{
+    border:2px solid #24435b;
+    margin-top:10px;
+    border-collapse: collapse;
+}
+
+.cuadro-fecha td{
+    border:1px solid #24435b;
+    padding:10px 15px;
+    text-align:center;
+}
+
+/* BARRA AZUL */
+
+.barra{
+    background:#9db4c7;
+    padding:10px;
+    margin-top:30px;
+    font-weight:bold;
+    color:#24435b;
+}
+
+.linea{
+    border-bottom:1px solid #999;
+    padding:8px 0;
+}
+
+/* TABLA */
+
+.tabla{
+    width:100%;
+    border-collapse: collapse;
+    margin-top:40px;
+}
+
+.tabla th{
+    background:#9db4c7;
+    padding:12px;
+    color:#24435b;
+    letter-spacing:2px;
+}
+
+.tabla td{
+    border:1px solid #444;
+    height:50px;
+    text-align:center;
+}
+
+.descripcion{
+    text-align:left;
+    padding-left:15px;
+    letter-spacing:2px;
+}
+
+/* TOTAL */
+
+.total-box{
+    display:flex;
+    justify-content:flex-end;
+    margin-top:20px;
+    align-items:center;
+}
+
+.total-label{
+    background:#9db4c7;
+    padding:15px 40px;
+    font-weight:bold;
+    letter-spacing:2px;
+}
+
+.total-monto{
+    padding:15px 40px;
+    border-bottom:2px solid black;
+    font-weight:bold;
+    font-size:20px;
+}
+
+/* FOOTER */
+
+.footer{
+    text-align:center;
+    margin-top:80px;
+    color:#24435b;
+    letter-spacing:2px;
+}
+
+/* SELLO CANCELADO */
+
+.sello{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%) rotate(-20deg);
+    font-size:70px;
+    color:rgba(0,0,0,0.15);
+    border:8px solid rgba(0,0,0,0.15);
+    padding:20px 60px;
+    border-radius:50%;
+    display:none;
+    font-weight:bold;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="contenedor" id="recibo">
+
+<div class="top">
+
+<div class="logo">
+    <h1>IMAFUT</h1>
+    <p>Imperio Academia de Fútbol</p>
+</div>
+
+<div class="recibo-info">
+    <h2>RECIBO</h2>
+    <div>No <span id="numeroRecibo">514</span></div>
+
+    <table class="cuadro-fecha">
+        <tr>
+            <td>DIA</td>
+            <td>MES</td>
+            <td>AÑO</td>
+        </tr>
+        <tr>
+            <td id="dia"></td>
+            <td id="mesFecha"></td>
+            <td id="anio"></td>
+        </tr>
+    </table>
+</div>
+
+</div>
+
+<div class="barra">
+RECIBÍ DE: <span id="alumno"></span>
+</div>
+
+<div class="linea"><strong>FORMA DE PAGO:</strong> <span id="formaPago"></span></div>
+<div class="linea"><strong>BANCO:</strong> <span id="banco"></span></div>
+<div class="linea"><strong>NO. AUT:</strong> <span id="autorizacion"></span></div>
+
+<table class="tabla">
+<tr>
+<th>DESCRIPCIÓN</th>
+<th>CANTIDAD</th>
+<th>MONTO</th>
+</tr>
+
+<tr>
+<td class="descripcion" id="descripcion"></td>
+<td>1</td>
+<td id="monto"></td>
+</tr>
+
+<tr><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td></tr>
+
+</table>
+
+<div class="total-box">
+<div class="total-label">TOTAL</div>
+<div class="total-monto">Q<span id="total"></span></div>
+</div>
+
+<div class="footer">
+Boca del monte, Villa Canales, Guatemala<br>
+adminimafut@gmail.com
+</div>
+
+<div class="sello" id="selloCancelado">
+CANCELADO
+</div>
+
+</div>
+
+<script>
+
+const params = new URLSearchParams(window.location.search);
+
+const categoria = params.get("categoria");
+const alumno = params.get("alumno");
+const mes = params.get("mes");
+const fecha = params.get("fecha");
+const monto = params.get("monto");
+const forma = params.get("forma");
+const banco = params.get("banco");
+const aut = params.get("aut");
+const estado = params.get("estado");
+
+// FECHA
+const fechaObj = new Date(fecha);
+document.getElementById("dia").textContent = fechaObj.getDate().toString().padStart(2,'0');
+document.getElementById("mesFecha").textContent = (fechaObj.getMonth()+1).toString().padStart(2,'0');
+document.getElementById("anio").textContent = fechaObj.getFullYear();
+
+// DATOS
+document.getElementById("alumno").textContent = alumno;
+document.getElementById("formaPago").textContent = forma;
+document.getElementById("banco").textContent = banco;
+document.getElementById("autorizacion").textContent = aut;
+document.getElementById("descripcion").textContent = categoria + " " + mes + " " + alumno;
+document.getElementById("monto").textContent = "Q" + parseFloat(monto).toFixed(2);
+document.getElementById("total").textContent = parseFloat(monto).toFixed(2);
+
+// SELLO
+if(estado === "cancelado"){
+    document.getElementById("selloCancelado").style.display = "block";
+}
+
+</script>
+
+</body>
+</html>
