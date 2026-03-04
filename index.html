@@ -5,7 +5,6 @@
 <title>Recibo IMAFUT</title>
 
 <style>
-
 body{
     font-family: 'Segoe UI', sans-serif;
     background:#e9edf1;
@@ -16,6 +15,7 @@ body{
     margin: 30px auto;
     background: white;
     padding: 50px;
+    position: relative;
 }
 
 /* ENCABEZADO */
@@ -23,25 +23,16 @@ body{
 .top{
     display:flex;
     justify-content: space-between;
+    align-items: flex-start;
 }
 
-.logo{
-    color:#24435b;
-}
-
-.logo h1{
-    font-size:50px;
-    margin:0;
-    letter-spacing:3px;
-}
-
-.logo p{
-    margin:0;
-    font-size:14px;
+.logo img{
+    width: 220px;
 }
 
 .recibo-info{
     text-align:center;
+    color:#24435b;
 }
 
 .recibo-info h2{
@@ -150,24 +141,22 @@ body{
     display:none;
     font-weight:bold;
 }
-
 </style>
 </head>
 
 <body>
 
-<div class="contenedor" id="recibo">
+<div class="contenedor">
 
 <div class="top">
 
 <div class="logo">
-    <h1>IMAFUT</h1>
-    <p>Imperio Academia de Fútbol</p>
+    <img src="IMAFUTLOGO.png" alt="IMAFUT Logo">
 </div>
 
 <div class="recibo-info">
     <h2>RECIBO</h2>
-    <div>No <span id="numeroRecibo">514</span></div>
+    <div>No <span id="numeroRecibo"></span></div>
 
     <table class="cuadro-fecha">
         <tr>
@@ -234,6 +223,7 @@ CANCELADO
 
 const params = new URLSearchParams(window.location.search);
 
+const numeroRecibo = params.get("recibo");
 const categoria = params.get("categoria");
 const alumno = params.get("alumno");
 const mes = params.get("mes");
@@ -244,22 +234,27 @@ const banco = params.get("banco");
 const aut = params.get("aut");
 const estado = params.get("estado");
 
-// FECHA
-const fechaObj = new Date(fecha);
-document.getElementById("dia").textContent = fechaObj.getDate().toString().padStart(2,'0');
-document.getElementById("mesFecha").textContent = (fechaObj.getMonth()+1).toString().padStart(2,'0');
-document.getElementById("anio").textContent = fechaObj.getFullYear();
+// Número de recibo
+document.getElementById("numeroRecibo").textContent = numeroRecibo || "000";
 
-// DATOS
-document.getElementById("alumno").textContent = alumno;
-document.getElementById("formaPago").textContent = forma;
-document.getElementById("banco").textContent = banco;
-document.getElementById("autorizacion").textContent = aut;
-document.getElementById("descripcion").textContent = categoria + " " + mes + " " + alumno;
-document.getElementById("monto").textContent = "Q" + parseFloat(monto).toFixed(2);
-document.getElementById("total").textContent = parseFloat(monto).toFixed(2);
+// Fecha
+if(fecha){
+    const fechaObj = new Date(fecha);
+    document.getElementById("dia").textContent = fechaObj.getDate().toString().padStart(2,'0');
+    document.getElementById("mesFecha").textContent = (fechaObj.getMonth()+1).toString().padStart(2,'0');
+    document.getElementById("anio").textContent = fechaObj.getFullYear();
+}
 
-// SELLO
+// Datos
+document.getElementById("alumno").textContent = alumno || "";
+document.getElementById("formaPago").textContent = forma || "";
+document.getElementById("banco").textContent = banco || "";
+document.getElementById("autorizacion").textContent = aut || "";
+document.getElementById("descripcion").textContent = (categoria || "") + " " + (mes || "") + " " + (alumno || "");
+document.getElementById("monto").textContent = monto ? "Q" + parseFloat(monto).toFixed(2) : "";
+document.getElementById("total").textContent = monto ? parseFloat(monto).toFixed(2) : "";
+
+// Sello
 if(estado === "cancelado"){
     document.getElementById("selloCancelado").style.display = "block";
 }
