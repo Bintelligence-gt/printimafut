@@ -175,7 +175,8 @@ body{
 </div>
 
 <div class="barra">
-RECIBÍ DE: <span id="alumno"></span>
+ALUMNO: <span id="alumno"></span><br>
+RECIBIDO DE: <span id="recibide"></span>
 </div>
 
 <div class="linea"><strong>FORMA DE PAGO:</strong> <span id="formaPago"></span></div>
@@ -226,6 +227,7 @@ const params = new URLSearchParams(window.location.search);
 const numeroRecibo = params.get("recibo");
 const categoria = params.get("categoria");
 const alumno = params.get("alumno");
+const recibide = params.get("recibide"); // NUEVO
 const mes = params.get("mes");
 const fecha = params.get("fecha");
 const monto = params.get("monto");
@@ -247,10 +249,14 @@ if(fecha){
 
 // Datos
 document.getElementById("alumno").textContent = alumno || "";
+document.getElementById("recibide").textContent = recibide || ""; // NUEVO
 document.getElementById("formaPago").textContent = forma || "";
 document.getElementById("banco").textContent = banco || "";
 document.getElementById("autorizacion").textContent = aut || "";
-document.getElementById("descripcion").textContent = (categoria || "") + " " + (mes || "") + " " + (alumno || "");
+
+document.getElementById("descripcion").textContent = 
+(categoria || "") + " " + (mes || "") + " " + (alumno || "");
+
 document.getElementById("monto").textContent = monto ? "Q" + parseFloat(monto).toFixed(2) : "";
 document.getElementById("total").textContent = monto ? parseFloat(monto).toFixed(2) : "";
 
